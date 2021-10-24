@@ -7,6 +7,9 @@ ModelImporter:
       74: -8945691123924629249
     second: Armature|Idle
   - first:
+      74: 2920023865792766560
+    second: Armature|PlaneAction
+  - first:
       74: -7551964380084998518
     second: Armature|Run
   - first:
