@@ -619,7 +619,7 @@ TerrainCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987414988}
   m_Material: {fileID: 0}
-  m_Enabled: 0
+  m_Enabled: 1
   m_TerrainData: {fileID: 15600000, guid: 8d363bc279557794f951e0b7c6410d97, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &987414990
@@ -852,7 +852,7 @@ GameObject:
   m_Name: Mountain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
+  m_NavMeshLayer: 1
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!154 &1309021098
