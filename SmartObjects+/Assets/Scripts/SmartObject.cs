@@ -18,6 +18,10 @@ public class SmartObject : MonoBehaviour
     [SerializeField]
     int capacity; //how many sims can benefit at same time
     [SerializeField]
+    float fillPerSecond; //how much it will feel the need per second
+    [SerializeField]
+    Sim providing; //the Sim this smartie is providing a need for right now, null if none
+    [SerializeField]
     bool isSus; //is this a sussy task?
     
 
@@ -39,5 +43,21 @@ public class SmartObject : MonoBehaviour
         {
             other.GetComponent<Sim>().ReceiveMessage(new ProvideNeedMessage { type = MessageType.ProvideNeed, payload = provides, pos = transform.position });
 								}
+				}
+
+    //Sim asks to request service to get need provided for
+    //if not already providing for a Sim, then provide for that one and return to them if they're chosen or not
+    public bool RequestService(Sim requester)
+    {
+        if(!providing)
+        {
+            providing = requester;
+								}
+        return providing == requester;
+				}
+
+    public bool IsSus()
+    {
+        return isSus;
 				}
 }

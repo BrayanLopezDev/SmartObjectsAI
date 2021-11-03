@@ -23,8 +23,10 @@ public class Sim : MonoBehaviour
 				[SerializeField]
 				float[] decays;
 				//most recently seen smart object (at their position because some can move) which fulfills need
+				[SerializeField]
 				Vector3[] providers;
 				//list of Sims I'm sus of
+				[SerializeField]
 				SortedSet<Transform> sussys;
 
 				// Start is called before the first frame update
@@ -69,7 +71,6 @@ public class Sim : MonoBehaviour
 																{
 																				//Sims = Sus Info Message? sus
 																				SusInfoMessage sims = (SusInfoMessage)ms;
-																				int needsIndex = (int)sims.type;
 
 																				foreach(var sussy in sims.payload)
 																				{
@@ -80,4 +81,5 @@ public class Sim : MonoBehaviour
 
 								}
 				}
+
 }

@@ -336,6 +336,7 @@
 "Assets/Scripts/Sim.cs"
 "Assets/Scripts/SimpleCameraController.cs"
 "Assets/Scripts/SmartObject.cs"
+"Assets/Scripts/World.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:8.0
 
