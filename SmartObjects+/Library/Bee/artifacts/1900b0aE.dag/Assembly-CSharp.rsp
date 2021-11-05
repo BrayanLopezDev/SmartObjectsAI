@@ -337,6 +337,7 @@
 "Assets/Scripts/SimpleCameraController.cs"
 "Assets/Scripts/SmartObject.cs"
 "Assets/Scripts/World.cs"
+"Assets/Scripts/WorldSpawner.cs"
 "Assets/TutorialInfo/Scripts/Readme.cs"
 -langversion:8.0
 
