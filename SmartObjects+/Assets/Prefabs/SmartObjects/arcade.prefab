@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 2776348641060602664}
   - component: {fileID: 2776348641060602666}
   - component: {fileID: 2776348641060602665}
+  - component: {fileID: -3466145706770459567}
   m_Layer: 0
   m_Name: arcade
   m_TagString: Untagged
@@ -106,8 +107,28 @@ MonoBehaviour:
   provides: 1
   capacity: 1
   fillPerSecond: 0.1
-  providing: {fileID: 0}
+  providing:
+  - {fileID: 0}
   isSus: 0
+--- !u!95 &-3466145706770459567
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3046398934993971347}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 24b813d9edc7e9241a9706fcfdb2ae98, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3998627079197200078
 GameObject:
   m_ObjectHideFlags: 0

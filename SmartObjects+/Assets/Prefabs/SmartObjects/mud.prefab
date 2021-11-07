@@ -316,6 +316,7 @@ GameObject:
   - component: {fileID: 4345386207249771907}
   - component: {fileID: 4307500382164066957}
   - component: {fileID: 4307500382164066956}
+  - component: {fileID: 4232072018755276794}
   m_Layer: 0
   m_Name: mud
   m_TagString: Untagged
@@ -367,8 +368,28 @@ MonoBehaviour:
   provides: 1
   capacity: 1
   fillPerSecond: 0.2
-  providing: {fileID: 0}
+  providing:
+  - {fileID: 0}
   isSus: 1
+--- !u!95 &4232072018755276794
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3964919293257283385}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e34b9640f1f296f45b63b14c41d95be9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4291500752826120845
 GameObject:
   m_ObjectHideFlags: 0

@@ -97,7 +97,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 50
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &2406850529348022682
 BoxCollider:
@@ -127,5 +127,6 @@ MonoBehaviour:
   provides: 3
   capacity: 4
   fillPerSecond: 0.15
-  providing: {fileID: 0}
+  providing:
+  - {fileID: 0}
   isSus: 0
