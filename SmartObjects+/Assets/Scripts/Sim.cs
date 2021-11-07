@@ -47,7 +47,7 @@ public class Sim : MonoBehaviour
 				NavMeshAgent agent;
 				[SerializeField]
 				SmartObject providingMe; //Smart Object thats providing a need for me right now
-				//if Start() has been called yet, needed because receiving messages can happen before Start() gets called
+																													//if Start() has been called yet, needed because receiving messages can happen before Start() gets called
 				bool started = false;
 				[SerializeField]
 				SimState state = SimState.Wandering;
@@ -56,6 +56,12 @@ public class Sim : MonoBehaviour
 				Needs mostNeed;
 				[SerializeField]
 				bool isAlive = true;
+				//sim will need a bit of control over the animator as well as the smartobjects
+				[SerializeField]
+				Animator ac;
+				//max distance Sim has to be to speak to another Sim
+				[SerializeField]
+				float speakRadius;
 
 				// Start is called before the first frame update
 				void Start()
@@ -69,6 +75,8 @@ public class Sim : MonoBehaviour
 
 								agent = GetComponent<NavMeshAgent>();
 
+								ac = GetComponent<Animator>();
+
 								sussys = new SortedSet<Transform>();
 								providers = new Vector3[(int)Needs.needsAmount];
 								needs = new float[(int)Needs.needsAmount];
@@ -79,6 +87,8 @@ public class Sim : MonoBehaviour
 								needs[(int)Needs.shade] = Random.Range(lows[(int)Needs.shade], maxs[(int)Needs.shade]);
 
 								started = true;
+								ac.SetBool("walk", true);
+								//StartCoroutine(Reprioritize());
 				}
 
 				// Update is called once per frame
@@ -104,14 +114,14 @@ public class Sim : MonoBehaviour
 
 				void Simulate()
 				{
-								//if agent doesnt have either a complete path nor an incomplete path
-								if (!agent.hasPath && !agent.pathPending)
+								//if sim has no destination because they reached it
+								if (ReachedDestination())
 								{
 												//if was traveling to needs provider, means reached destination, now time to interact
 												if (state == SimState.TravelingToProvider)
 												{
 																SmartObject provider = null;
-																Collider[] cols = Physics.OverlapSphere(transform.position, 10f);
+																Collider[] cols = Physics.OverlapSphere(transform.position, speakRadius);
 
 																foreach (Collider col in cols)
 																{
@@ -119,11 +129,18 @@ public class Sim : MonoBehaviour
 
 																				if (provider)
 																				{
-																								ArriveAtProvider(provider);
-																								break;
+																								if (provider.GetProvides() == mostNeed)
+																								{
+																												ArriveAtProvider(provider);
+																												break;
+																								}
+																								else
+																								{
+																												provider = null;
+																								}
 																				}
-																}
 
+																}
 																//what if there was no provider?
 																if (!provider)
 																{
@@ -133,35 +150,51 @@ public class Sim : MonoBehaviour
 												else
 												{
 																//if Sim is interacting with provider, aka getting serviced
-																if(state == SimState.InteractingWithProvider)
+																if (state == SimState.InteractingWithProvider)
 																{
 																				InteractingWithProvider();
 																				return;
 																}
 
-																int biggestNeed = GetBiggestNeed();
-																
-																//if Sim has no needs right now, then wander about and explore
-																if (biggestNeed == -1)
-																{
-																				state = SimState.Wandering;
-																				agent.SetDestination(world.GetRandomSpotWithinTerrainBounds());
-																				return;
-																}
-
-																mostNeed = (Needs)biggestNeed;
-
-																if (providers[biggestNeed] != Vector3.zero)
-																{
-																				state = SimState.TravelingToProvider;
-																				agent.SetDestination(providers[biggestNeed]);
-																}
-																else
-																{
-																				agent.SetDestination(world.GetRandomSpotWithinTerrainBounds());
-																}
 												}
 								}
+								if (state == SimState.Wandering)
+								{
+												Reprioritize();
+								}
+				}
+
+				bool ReachedDestination()
+				{
+								bool closeEnough = false;
+								if (mostNeed != Needs.needsAmount)
+								{
+												closeEnough = (providers[(int)mostNeed] - transform.position).sqrMagnitude <= 4f;
+												if (closeEnough)
+												{
+																agent.destination = transform.position;
+												}
+								}
+								//if agent doesnt have either a complete path nor an incomplete path, or its close enough to have reached destination
+								return !agent.hasPath && !agent.pathPending || closeEnough;
+				}
+
+				void Reprioritize()
+				{
+								int biggestNeed = GetBiggestNeed();
+
+								mostNeed = (Needs)biggestNeed;
+
+								if (providers[biggestNeed] != Vector3.zero)
+								{
+												state = SimState.TravelingToProvider;
+												agent.SetDestination(providers[biggestNeed]);
+								}
+								else
+								{
+												AskForDirectionsFromNearbySims();
+								}
+
 				}
 
 				int GetBiggestNeed()
@@ -170,22 +203,25 @@ public class Sim : MonoBehaviour
 								float smallestNumber = float.MaxValue;
 								for (int i = 0; i < (int)Needs.needsAmount; ++i)
 								{
-												if (needs[i] < smallestNumber && needs[i] <= lows[i])
+												if (needs[i] < smallestNumber /*&& needs[i] <= lows[i]*/)
 												{
 																biggestNeed = i;
+																smallestNumber = needs[i];
 												}
 								}
 								return biggestNeed;
 				}
 				void InteractingWithProvider()
 				{
-								if(needs[(int)mostNeed] >= maxs[(int)mostNeed])
+								if (needs[(int)mostNeed] >= maxs[(int)mostNeed])
 								{
-												if(providingMe)
+												if (providingMe)
 												{
 																providingMe.RequestRemovalOfService(this);
 																providingMe = null;
 																state = SimState.Wandering;
+																ac.SetBool("walk", true);
+																Reprioritize();
 												}
 								}
 				}
@@ -232,6 +268,12 @@ public class Sim : MonoBehaviour
 								providingMe = provider;
 				}
 
+				void AskForDirectionsFromNearbySims()
+				{
+								Collider[] cols = Physics.OverlapSphere(transform.position, speakRadius);
+								AskForDirectionsFromNearbySims(cols);
+				}
+
 				void AskForDirectionsFromNearbySims(Collider[] cols)
 				{
 								//my now wrong knowledge of provider location
@@ -275,6 +317,7 @@ public class Sim : MonoBehaviour
 												//go somewhere random
 												providers[(int)mostNeed] = world.GetRandomSpotWithinTerrainBounds();
 												agent.SetDestination(providers[(int)mostNeed]);
+												state = SimState.TravelingToProvider;
 								}
 				}
 				public Vector3 RequestDirectionsToProvider(Needs service)
@@ -295,6 +338,11 @@ public class Sim : MonoBehaviour
 																				int needsIndex = (int)pnms.payload;
 
 																				providers[needsIndex] = pnms.pos;
+				
+																				if(mostNeed == pnms.payload && state == SimState.TravelingToProvider)
+																				{
+																								agent.SetDestination(pnms.pos);
+																				}
 																				break;
 																}
 

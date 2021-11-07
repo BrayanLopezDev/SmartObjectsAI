@@ -61,6 +61,10 @@ public class SmartObject : MonoBehaviour
 								}
 				}
 
+    public Needs GetProvides()
+    {
+        return provides;
+				}
     public void RequestRemovalOfService(Sim sim)
     {
         for (int i = 0; i < capacity; ++i)
@@ -80,6 +84,7 @@ public class SmartObject : MonoBehaviour
             //stop my animation
             UnanimateMe();
 								}
+
 				}
     void AnimateSim(Sim sim)
     {

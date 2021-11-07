@@ -301,6 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef88ddce50687484a8b0ca6dc309a916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  world: {fileID: 0}
   maxs:
   - 1
   - 1
@@ -324,11 +325,15 @@ MonoBehaviour:
   needs: []
   decays:
   - 0.004
-  - 0.0085
-  - 0.008
-  - 0.0085
+  - 0.0065
+  - 0.007
+  - 0.0055
   providers: []
   agent: {fileID: 0}
+  providingMe: {fileID: 0}
+  state: 0
+  mostNeed: 4
+  isAlive: 1
 --- !u!135 &7336023782919645613
 SphereCollider:
   m_ObjectHideFlags: 0

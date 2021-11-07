@@ -30,7 +30,7 @@ public class WorldSpawner : MonoBehaviour
 								//spawn smart objects, can cause infinite loop because if raycast hits a trigger from a smart object, it wont count as it hitting the terrain
 								for (int i = 0; i < smartObjects.Length; ++i)
 								{
-												maxSpawns[i] = (int)(maxSpawnsPerSim[i] * simSpawnAmount);
+												maxSpawns[i] = Mathf.Max((int)(maxSpawnsPerSim[i] * simSpawnAmount),1);
 												for (int j = 0; j < maxSpawns[i]; ++j)
 												{
 																Vector3 spawnPoint = world.GetRandomSpotOnTerrain();
