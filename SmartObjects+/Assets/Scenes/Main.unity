@@ -349,12 +349,12 @@ MonoBehaviour:
   maxSpawnsPerSim:
   - 0.2
   - 0.25
-  - 0.3
-  - 0.5
   - 0.1
-  - 0.3
+  - 0.15
+  - 0.1
+  - 0.1
   - 0.2
-  simSpawnAmount: 15
+  simSpawnAmount: 4
   raycastStartY: 40
   world: {fileID: 987414992}
 --- !u!4 &1184616545

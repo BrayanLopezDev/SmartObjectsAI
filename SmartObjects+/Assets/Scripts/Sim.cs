@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,6 +16,9 @@ public enum SimState
 
 public class Sim : MonoBehaviour,IComparable<Sim>
 {
+				//to have something for the IComparable to sort them by, also to tell them apart
+				[SerializeField]
+				int id;
 				//important info about the world
 				[SerializeField]
 				World world;
@@ -79,6 +83,8 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 								{
 												return;
 								}
+
+								id = Random.Range(int.MinValue, int.MaxValue);
 
 								world = GameObject.FindObjectOfType<World>();
 
@@ -187,6 +193,10 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 								{
 												Reprioritize();
 								}
+								if(state == SimState.TravelingToProvider)
+								{
+												Travel();
+								}
 				}
 
 				bool ReachedDestination()
@@ -212,6 +222,11 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				bool CloseEnough(Vector3 destination)
 				{
 								return (destination - transform.position).sqrMagnitude <= 8f;
+				}
+
+				bool CloseEnough(Vector3 vec1, Vector3 vec2, float sqrMag)
+				{
+								return (vec2 - vec1).sqrMagnitude <= sqrMag;
 				}
 				void Reprioritize()
 				{
@@ -346,7 +361,7 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 												}
 								}
 								//if I didn't get what I thought were valid directions
-								if (providers[(int)mostNeed] == Vector3.zero)
+								if (CloseEnough(providers[(int)mostNeed],outdated,25f))
 								{
 												//go somewhere random
 												providers[(int)mostNeed] = world.GetRandomSpotWithinTerrainBounds();
@@ -467,6 +482,6 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				//I don't care how they're sorted, I just wanted a Set but I can't have a Set unless its specifically a Sorted Set???
 				public int CompareTo(Sim other)
 				{
-								return 1; 
+								return (int)(id - other.id); 
 				}
 }

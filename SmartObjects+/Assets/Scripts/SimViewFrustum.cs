@@ -38,16 +38,16 @@ public class SimViewFrustum : MonoBehaviour
 				{
 								Start();
 				}
-				// Update is called once per frame
-				void Update()
-				{
 
-				}
 				void OnTriggerEnter(Collider other)
 				{
 								EnsureStarted();
 								if (other.CompareTag("Sim") )
 								{
+												if(other.gameObject == transform.parent.gameObject)
+												{
+																return; //I wish I didnt have to do this but they become sus of themselves otherwise
+												}
 												Sim otherSim = other.GetComponent<Sim>();
 												//if saw someone dead
 												if (!otherSim.IsAlive())
@@ -80,15 +80,16 @@ public class SimViewFrustum : MonoBehaviour
 								}
 								if(sussySmartie && other.gameObject == sussySmartie.gameObject)
 								{
-												if(crime == SusManager.NeedToCrime(sussySmartie.GetProvides()))
-												{
-																crime = Crimes.undetermined;
-												}
+												//if(crime == SusManager.NeedToCrime(sussySmartie.GetProvides()))
+												//{
+												//				crime = Crimes.undetermined;
+												//}
+												crime = Crimes.undetermined;
 												sussySmartie = null;
 								}
 				}
 
-				void LateUpdate()
+				void Update()
 				{
 								if (crime != Crimes.undetermined)
 								{
@@ -105,8 +106,8 @@ public class SimViewFrustum : MonoBehaviour
 
 												sim.ReceiveMessage(new SusInfoMessage { type = MessageType.SusInfo, payload = inMyVision,crime=crime });
 												inMyVision.Clear();
-												crime = Crimes.undetermined;
-												sussySmartie = null;
+												//crime = Crimes.undetermined;
+												//sussySmartie = null;
 								}
 				}
 }
