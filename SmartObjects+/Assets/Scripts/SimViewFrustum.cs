@@ -18,6 +18,8 @@ public class SimViewFrustum : MonoBehaviour
 				Crimes crime;
 				//OnTriggerEnter() can be called before Start(), this is to make sure everything is initialized beforehand
 				bool started = false;
+				//make sure they stop seeing once they're dead
+				bool isAlive = true;
 				// Start is called before the first frame update
 				void Start()
 				{
@@ -42,11 +44,16 @@ public class SimViewFrustum : MonoBehaviour
 				void OnTriggerEnter(Collider other)
 				{
 								EnsureStarted();
+								if (!isAlive) //stop seeing more sims
+								{
+												return;
+								}
+
 								if (other.CompareTag("Sim") )
 								{
 												if(other.gameObject == transform.parent.gameObject)
 												{
-																return; //I wish I didnt have to do this but they become sus of themselves otherwise
+																return; //I wish I didnt have to do this but they become sus of themselves otherwise, maybe fixed after removing sight after death?
 												}
 												Sim otherSim = other.GetComponent<Sim>();
 												//if saw someone dead
@@ -74,11 +81,16 @@ public class SimViewFrustum : MonoBehaviour
 
 				void OnTriggerExit(Collider other)
 				{
+								if (!isAlive) //stop unseeing more sims
+								{
+												return;
+								}
+
 								if (other.CompareTag("Sim"))
 								{
 												inMyVision.Remove(other.GetComponent<Sim>());
 								}
-								if(sussySmartie && other.gameObject == sussySmartie.gameObject)
+								if(sussySmartie && other.transform.parent && other.transform.parent.gameObject == sussySmartie.gameObject)
 								{
 												//if(crime == SusManager.NeedToCrime(sussySmartie.GetProvides()))
 												//{
@@ -87,10 +99,36 @@ public class SimViewFrustum : MonoBehaviour
 												crime = Crimes.undetermined;
 												sussySmartie = null;
 								}
+								if(crime == Crimes.kill)
+								{
+												if(inMyVision.Count == 0)
+												{
+																crime = Crimes.undetermined;
+																return;
+												}
+												bool anydead = false;
+												foreach(Sim sim in inMyVision)
+												{
+																if(!sim.IsAlive())
+																{
+																				anydead = true;
+																				break;
+																}
+												}
+												if(!anydead)
+												{
+																crime = Crimes.undetermined;
+												}
+								}
 				}
 
 				void Update()
 				{
+								if(!isAlive) //stop notifying the sim that they see others
+								{
+												return;
+								}
+
 								if (crime != Crimes.undetermined)
 								{
 												if(inMyVision.Count == 0)
@@ -109,5 +147,9 @@ public class SimViewFrustum : MonoBehaviour
 												//crime = Crimes.undetermined;
 												//sussySmartie = null;
 								}
+				}
+				public void OnDeath()
+				{
+								isAlive = false;
 				}
 }

@@ -455,6 +455,7 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				public void Die()
 				{
 								sussyMan.OnDeath(this, sussys);
+								GetComponentInChildren<SimViewFrustum>().OnDeath();
 								isAlive = false;
 								this.enabled = false;
 				}
