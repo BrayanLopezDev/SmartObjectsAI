@@ -75,6 +75,9 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				//will run when critically low on a need, or to run to police or to run to witnesses
 				[SerializeField]
 				float runSpeed;
+				//for debugging, why do they randomly stop walking???
+				[SerializeField]
+				bool reachedDestination;
 
 				// Start is called before the first frame update
 				void Start()
@@ -145,8 +148,9 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				}
 				void Simulate()
 				{
+								reachedDestination = ReachedDestination();
 								//if sim has no destination because they reached it
-								if (ReachedDestination())
+								if (reachedDestination)
 								{
 												//if was traveling to needs provider, means reached destination, now time to interact
 												if (state == SimState.TravelingToProvider)
@@ -372,6 +376,10 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				public Vector3 RequestDirectionsToProvider(Needs service)
 				{
 								EnsureStarted();
+								if(providers[(int)service] == Vector3.zero)
+								{
+												return world.GetRandomSpotWithinTerrainBounds();
+								}
 								return providers[(int)service];
 				}
 

@@ -135,9 +135,9 @@ GameObject:
   - component: {fileID: 987414990}
   - component: {fileID: 987414989}
   - component: {fileID: 987414992}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Walkable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 127
@@ -354,7 +354,7 @@ MonoBehaviour:
   - 0.1
   - 0.1
   - 0.2
-  simSpawnAmount: 4
+  simSpawnAmount: 10
   raycastStartY: 40
   world: {fileID: 987414992}
 --- !u!4 &1184616545
@@ -382,7 +382,7 @@ GameObject:
   - component: {fileID: 1309021100}
   - component: {fileID: 1309021099}
   - component: {fileID: 1309021098}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Unwalkable
   m_TagString: Unwalkable
   m_Icon: {fileID: 0}

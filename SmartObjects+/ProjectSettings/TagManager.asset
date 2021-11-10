@@ -8,6 +8,7 @@ TagManager:
   - Unwalkable
   - SimViewFrustum
   - SmartObject
+  - Walkable
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - SimView
   - Water
   - UI
-  - 
+  - Terrain
   - 
   - 
   - 

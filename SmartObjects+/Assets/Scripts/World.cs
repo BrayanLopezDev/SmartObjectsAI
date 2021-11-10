@@ -27,6 +27,8 @@ public class World : MonoBehaviour
 
 				public Vector3 GetRandomSpotOnTerrain()
 				{
+								int its = 0;
+								int limit = 64;
 								while(true)
 								{
 												float raycastStartY = 5f*terrain.terrainData.size.y + transform.position.y;
@@ -35,9 +37,15 @@ public class World : MonoBehaviour
 												Vector3 rayEnd = new Vector3(rayStart.x, -2f * rayStart.y, rayStart.z);
 
 												RaycastHit hit;
-												if (Physics.Raycast(new Ray(rayStart, rayEnd), out hit, 2f * raycastStartY) && hit.collider.gameObject == gameObject)
+												if (Physics.Raycast(new Ray(rayStart, rayEnd), out hit, 2f * raycastStartY) && hit.collider.CompareTag("Walkable"))
 												{
 																return hit.point;
+												}
+												//failsafe to prevent spawning from locking up the whole game
+												++its;
+												if(its >= limit)
+												{
+																return GetRandomSpotWithinTerrainBounds();
 												}
 								}
 				}
@@ -46,13 +54,14 @@ public class World : MonoBehaviour
 				{
 								while (true)
 								{
-												float raycastStartY = terrain.terrainData.size.y + transform.position.y;
+												float raycastStartY = 5f*terrain.terrainData.size.y + Mathf.Abs(transform.position.y);
 
 												Vector3 rayStart = new Vector3(Random.Range(0.5f * -size, 0.5f * size), raycastStartY, Random.Range(0.5f * -size, 0.5f * size));
 												Vector3 rayEnd = new Vector3(rayStart.x, -2f * rayStart.y, rayStart.z);
 
 												RaycastHit hit;
-												if (Physics.Raycast(new Ray(rayStart, rayEnd), out hit, 2f * raycastStartY) && !hit.collider.CompareTag("Unwalkable"))
+												//layer 6, so ray only tries to detect collisions with terrain
+												if (Physics.Raycast(new Ray(rayStart, rayEnd), out hit, 2f * raycastStartY,(1<<6)) && hit.collider.CompareTag("Walkable"))
 												{
 																return hit.point;
 												}
