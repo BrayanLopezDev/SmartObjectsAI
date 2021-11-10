@@ -123,6 +123,10 @@ MonoBehaviour:
   state: 0
   mostNeed: 0
   isAlive: 1
+  ac: {fileID: 0}
+  speakRadius: 10
+  walkSpeed: 0
+  runSpeed: 0
 --- !u!135 &1646312850793683202
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -131,7 +135,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226108939716774798}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.9
@@ -386,9 +390,9 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6578006479359736898, guid: 737deb5271c45d841ab18abda6c6e4d3, type: 3}
-  - {fileID: -3349892475814757471, guid: 737deb5271c45d841ab18abda6c6e4d3, type: 3}
-  - {fileID: -8896051167825165466, guid: 737deb5271c45d841ab18abda6c6e4d3, type: 3}
+  - {fileID: 2100000, guid: 082697f25eb846b4e92c6e9b1c5bc058, type: 2}
+  - {fileID: 2100000, guid: 9e39b2cf1e932d84b9d7520d084a9cde, type: 2}
+  - {fileID: 2100000, guid: 2fe97ab2b1d870648be6e9447cf87e09, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

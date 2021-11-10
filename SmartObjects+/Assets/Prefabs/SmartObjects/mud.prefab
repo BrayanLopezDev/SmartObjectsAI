@@ -101,7 +101,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1780577073810419668}
   - component: {fileID: 6200566857285500074}
-  m_Layer: 0
+  - component: {fileID: 885692753}
+  m_Layer: 3
   m_Name: Mud
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,6 +183,19 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.53792167, z: 0.00000011920929}
     m_Extent: {x: 2.901578, y: 0.45664254, z: 2.9015775}
   m_DirtyAABB: 0
+--- !u!135 &885692753
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1714171841143387333}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 4.1599464
+  m_Center: {x: 0.0000000674213, y: -0.0000002628438, z: 0.77120954}
 --- !u!1 &2287384873461408866
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,7 +333,7 @@ GameObject:
   - component: {fileID: 4232072018755276794}
   m_Layer: 0
   m_Name: mud
-  m_TagString: Untagged
+  m_TagString: SmartObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -367,7 +381,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   provides: 1
   capacity: 1
-  fillPerSecond: 0.2
+  fillPerSecond: 0.085
   providing:
   - {fileID: 0}
   isSus: 1

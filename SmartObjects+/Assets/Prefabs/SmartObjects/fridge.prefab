@@ -72,7 +72,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6321864745130782971}
   - component: {fileID: 1865448646817771205}
-  m_Layer: 0
+  - component: {fileID: 6112999443742220214}
+  m_Layer: 3
   m_Name: Fridge.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,6 +149,19 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.23598078, y: 1.9875305, z: -0.000000059604645}
     m_Extent: {x: 0.7622458, y: 2.004111, z: 1.0000002}
   m_DirtyAABB: 0
+--- !u!135 &6112999443742220214
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916464218774236480}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.4703214
+  m_Center: {x: 0.23598036, y: -0.00000015894572, z: 1.9316092}
 --- !u!1 &2227331974366084245
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +208,7 @@ GameObject:
   - component: {fileID: 2182572664201618104}
   m_Layer: 0
   m_Name: fridge
-  m_TagString: Untagged
+  m_TagString: SmartObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -226,7 +240,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 25
+  m_Radius: 15
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &1436760754915214029
 BoxCollider:
@@ -255,7 +269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   provides: 0
   capacity: 1
-  fillPerSecond: 0.1
+  fillPerSecond: 0.065
   providing:
   - {fileID: 0}
   isSus: 0

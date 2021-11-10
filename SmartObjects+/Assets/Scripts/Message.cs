@@ -20,5 +20,6 @@ public class ProvideNeedMessage : Message
 }
 public class SusInfoMessage: Message
 {
-    public SortedSet<Transform> payload;
+    public SortedSet<Sim> payload;
+    public Crimes crime;
 }

@@ -6,11 +6,13 @@ TagManager:
   tags:
   - Sim
   - Unwalkable
+  - SimViewFrustum
+  - SmartObject
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - SimView
   - Water
   - UI
   - 

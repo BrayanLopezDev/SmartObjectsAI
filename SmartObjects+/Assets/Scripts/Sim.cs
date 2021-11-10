@@ -13,11 +13,13 @@ public enum SimState
 				InteractingWithProvider
 }
 
-public class Sim : MonoBehaviour
+public class Sim : MonoBehaviour,IComparable<Sim>
 {
 				//important info about the world
 				[SerializeField]
 				World world;
+				//the sus manager stores important info about who is sus
+				SusManager sussyMan;
 				//max a Sim can get of needs
 				[SerializeField]
 				float[] maxs;
@@ -41,19 +43,20 @@ public class Sim : MonoBehaviour
 				Vector3[] providers;
 				//list of Sims I'm sus of
 				[SerializeField]
-				SortedSet<Transform> sussys;
+				SortedSet<Sim> sussys;
 				//my navigation agent
 				[SerializeField]
 				NavMeshAgent agent;
+				//Smart Object thats providing a need for me right now
 				[SerializeField]
-				SmartObject providingMe; //Smart Object thats providing a need for me right now
-																													//if Start() has been called yet, needed because receiving messages can happen before Start() gets called
+				SmartObject providingMe; 
+				//if Start() has been called yet, needed because receiving messages can happen before Start() gets called
 				bool started = false;
 				[SerializeField]
 				SimState state = SimState.Wandering;
 				//what Sim needs the most right now
 				[SerializeField]
-				Needs mostNeed;
+				Needs mostNeed = Needs.food;
 				[SerializeField]
 				bool isAlive = true;
 				//sim will need a bit of control over the animator as well as the smartobjects
@@ -62,6 +65,12 @@ public class Sim : MonoBehaviour
 				//max distance Sim has to be to speak to another Sim
 				[SerializeField]
 				float speakRadius;
+				//will usually be walking
+				[SerializeField]
+				float walkSpeed;
+				//will run when critically low on a need, or to run to police or to run to witnesses
+				[SerializeField]
+				float runSpeed;
 
 				// Start is called before the first frame update
 				void Start()
@@ -73,11 +82,13 @@ public class Sim : MonoBehaviour
 
 								world = GameObject.FindObjectOfType<World>();
 
+								sussyMan = GameObject.FindObjectOfType<SusManager>();
+
 								agent = GetComponent<NavMeshAgent>();
 
 								ac = GetComponent<Animator>();
 
-								sussys = new SortedSet<Transform>();
+								sussys = new SortedSet<Sim>();
 								providers = new Vector3[(int)Needs.needsAmount];
 								needs = new float[(int)Needs.needsAmount];
 
@@ -87,7 +98,12 @@ public class Sim : MonoBehaviour
 								needs[(int)Needs.shade] = Random.Range(lows[(int)Needs.shade], maxs[(int)Needs.shade]);
 
 								started = true;
-								ac.SetBool("walk", true);
+
+								walkSpeed = agent.speed;
+								runSpeed = agent.speed * 2f;
+
+								Reprioritize();
+								Travel();
 								//StartCoroutine(Reprioritize());
 				}
 
@@ -104,14 +120,23 @@ public class Sim : MonoBehaviour
 												needs[i] -= Time.deltaTime * decays[i];
 												if (needs[i] <= 0f)
 												{
-																SmartObject.KillWhileNotBeingServiced(this);
+																//die
+																Kill();
 																return;
 												}
 								}
 
 								Simulate();
 				}
-
+				//the animator can be destroyed and a different one can be added at an undetermined time, get AC this way
+				Animator AC()
+				{
+								if(!ac)
+								{
+												ac = GetComponent<Animator>();
+								}
+								return ac;
+				}
 				void Simulate()
 				{
 								//if sim has no destination because they reached it
@@ -129,7 +154,7 @@ public class Sim : MonoBehaviour
 
 																				if (provider)
 																				{
-																								if (provider.GetProvides() == mostNeed)
+																								if (provider.GetProvides() == mostNeed && CloseEnough(provider.transform.position))
 																								{
 																												ArriveAtProvider(provider);
 																												break;
@@ -169,7 +194,12 @@ public class Sim : MonoBehaviour
 								bool closeEnough = false;
 								if (mostNeed != Needs.needsAmount)
 								{
-												closeEnough = (providers[(int)mostNeed] - transform.position).sqrMagnitude <= 4f;
+												//solves the problem of sim thinking they reached their destination but they're 20ft away
+												if(agent.destination != providers[(int)mostNeed])
+												{
+																agent.SetDestination(providers[(int)mostNeed]);
+												}
+												closeEnough = CloseEnough(providers[(int)mostNeed]);
 												if (closeEnough)
 												{
 																agent.destination = transform.position;
@@ -179,6 +209,10 @@ public class Sim : MonoBehaviour
 								return !agent.hasPath && !agent.pathPending || closeEnough;
 				}
 
+				bool CloseEnough(Vector3 destination)
+				{
+								return (destination - transform.position).sqrMagnitude <= 8f;
+				}
 				void Reprioritize()
 				{
 								int biggestNeed = GetBiggestNeed();
@@ -220,8 +254,8 @@ public class Sim : MonoBehaviour
 																providingMe.RequestRemovalOfService(this);
 																providingMe = null;
 																state = SimState.Wandering;
-																ac.SetBool("walk", true);
 																Reprioritize();
+																Travel();
 												}
 								}
 				}
@@ -232,7 +266,7 @@ public class Sim : MonoBehaviour
 								if (!response.response)
 								{
 												//if we're desparate because we REALLY need this				
-												if (needs[(int)response.service] <= crits[(int)response.service])
+												if (IsCritical(response.service))
 												{
 																int min = 0;
 																int max = response.servicing.Length;
@@ -322,14 +356,17 @@ public class Sim : MonoBehaviour
 				}
 				public Vector3 RequestDirectionsToProvider(Needs service)
 				{
+								EnsureStarted();
 								return providers[(int)service];
+				}
+
+				void EnsureStarted()
+				{
+								Start();
 				}
 				public void ReceiveMessage(Message ms)
 				{
-								if (!started)
-								{
-												Start();
-								}
+								EnsureStarted();
 								switch (ms.type)
 								{
 												case MessageType.ProvideNeed:
@@ -338,7 +375,7 @@ public class Sim : MonoBehaviour
 																				int needsIndex = (int)pnms.payload;
 
 																				providers[needsIndex] = pnms.pos;
-				
+																				//if this smartobject has what I need the most, go there instead
 																				if(mostNeed == pnms.payload && state == SimState.TravelingToProvider)
 																				{
 																								agent.SetDestination(pnms.pos);
@@ -350,24 +387,86 @@ public class Sim : MonoBehaviour
 																{
 																				//Sims = Sus Info Message? sus
 																				SusInfoMessage sims = (SusInfoMessage)ms;
-
+																				//sims I became newly sus of after other sim told me who they are sus of
+																				List<Sim> newlySus = new List<Sim>();
 																				foreach (var sussy in sims.payload)
 																				{
-																								sussys.Add(sussy);
+																								if(!sussys.Contains(sussy))
+																								{
+																												newlySus.Add(sussy);
+																												sussys.Add(sussy);
+																								}
 																				}
+
+																				sussyMan.OnSus(sims.crime, newlySus);
 																				break;
 																}
 
 								}
 				}
 
-				public void Die()
+				bool IsCritical(Needs need)
 				{
-								isAlive = false;
+								return needs[(int)need] <= crits[(int)need];
 				}
 
+				void Travel()
+				{
+								if(IsCritical(mostNeed))
+								{
+												//play run animation
+												AC().SetBool("run", true);
+												AC().SetBool("walk", false);
+												//set speed to run speed
+												agent.speed = runSpeed;
+								}
+								else
+								{
+												//play walk animation
+												AC().SetBool("run", false);
+												AC().SetBool("walk", true);
+												//set speed to walk speed
+												agent.speed = walkSpeed;
+								}
+				}
+				public void Die()
+				{
+								sussyMan.OnDeath(this, sussys);
+								isAlive = false;
+								this.enabled = false;
+				}
+
+				public void Kill()
+				{
+								if(providingMe) //if a smart object is providing for me right now
+								{
+												//have them kill me
+												providingMe.Kill(this);
+								}
+								else //find any smart object and have them kill me
+								{
+												SmartObject smartie = GameObject.FindObjectOfType<SmartObject>();
+
+												if(smartie)
+												{
+																smartie.Kill(this);
+												}
+								}
+				}
+
+				public bool IsAlive()
+				{
+								EnsureStarted();
+								return isAlive;
+				}
 				public void ServiceNeed(Needs need, float amount)
 				{
 								needs[(int)need] += amount;
+				}
+
+				//I don't care how they're sorted, I just wanted a Set but I can't have a Set unless its specifically a Sorted Set???
+				public int CompareTo(Sim other)
+				{
+								return 1; 
 				}
 }

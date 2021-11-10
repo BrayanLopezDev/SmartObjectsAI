@@ -89,6 +89,12 @@ public class SmartObject : MonoBehaviour
     void AnimateSim(Sim sim)
     {
         Animator simAC = sim.GetComponent<Animator>();
+
+        if(!simAC)
+        {
+            return;
+								}
+
         //make sure their animator isn't showing any other animations
         foreach (AnimatorControllerParameter parameter in simAC.parameters)
         {
@@ -124,7 +130,7 @@ public class SmartObject : MonoBehaviour
 								if(other.CompareTag("Sim"))
         {
             Sim sim = other.GetComponent<Sim>();
-            if(sim)
+            if(sim && sim.IsAlive())
             {
                 sim.ReceiveMessage(new ProvideNeedMessage { type = MessageType.ProvideNeed, payload = provides, pos = transform.position });
 												}
@@ -179,18 +185,26 @@ public class SmartObject : MonoBehaviour
 
     public void Kill(Sim sim)
     {
+        //remove from servicing
         RequestRemovalOfService(sim);
-        KillWhileNotBeingServiced(sim);
+        //kill
+        KillSim(sim);
 				}
-    public static void KillWhileNotBeingServiced(Sim sim)
+    void KillSim(Sim sim)
     {
+        //let the Sim know they're dead
         sim.Die();
+        //get rid of Sim's navmeshagent so it cant try to move anywhere
         Destroy(sim.GetComponent<NavMeshAgent>());
-        //Destroy(sim.GetComponent<Sim>());
+        //make Sim suceptible to physics
         Rigidbody rb = sim.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.useGravity = true;
-				}
+
+        //unanimate sim
+        sim.GetComponent<Animator>().enabled = false;
+
+    }
 
     public bool IsSus()
     {

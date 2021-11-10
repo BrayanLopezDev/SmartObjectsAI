@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: -3466145706770459567}
   m_Layer: 0
   m_Name: arcade
-  m_TagString: Untagged
+  m_TagString: SmartObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -77,7 +77,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 25
+  m_Radius: 18.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &2776348641060602666
 BoxCollider:
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   provides: 1
   capacity: 1
-  fillPerSecond: 0.1
+  fillPerSecond: 0.05
   providing:
   - {fileID: 0}
   isSus: 0
@@ -356,7 +356,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1420640189242798040}
   - component: {fileID: 2095697659013893155}
-  m_Layer: 0
+  - component: {fileID: 1479026577}
+  m_Layer: 3
   m_Name: ArcadeMachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,3 +439,16 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.0072034597, y: 1.9853983, z: -0.07634741}
     m_Extent: {x: 0.83064127, y: 1.9800987, z: 0.8664509}
   m_DirtyAABB: 0
+--- !u!135 &1479026577
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8907942791842384818}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.9800985
+  m_Center: {x: 0.0072036334, y: 0.07634716, z: 1.9853978}

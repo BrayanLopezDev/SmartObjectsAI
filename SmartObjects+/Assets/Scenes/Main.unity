@@ -106,15 +106,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.75
-    agentHeight: 2.5
+    agentRadius: 0.4
+    agentHeight: 2
     agentSlope: 45
     agentClimb: 0.4
-    ledgeDropHeight: 0
+    ledgeDropHeight: 1
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.25
+    cellSize: 0.13333334
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -199,7 +199,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &987414992
 MonoBehaviour:
@@ -347,14 +347,14 @@ MonoBehaviour:
   - {fileID: 7456626880226759133, guid: e87f7d5eefcda6a4ea7c0fcc6933bd2e, type: 3}
   simprefab: {fileID: 4181864684214655183, guid: e05bf30800ec4804f8dd81e4809ee552, type: 3}
   maxSpawnsPerSim:
-  - 0.25
-  - 0.4
-  - 0.65
-  - 0.8
-  - 0.1
-  - 0.4
   - 0.2
-  simSpawnAmount: 10
+  - 0.25
+  - 0.3
+  - 0.5
+  - 0.1
+  - 0.3
+  - 0.2
+  simSpawnAmount: 15
   raycastStartY: 40
   world: {fileID: 987414992}
 --- !u!4 &1184616545
@@ -369,7 +369,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1309021097
 GameObject:
@@ -446,7 +446,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1339101211
 GameObject:
@@ -564,3 +564,60 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!1 &1584082939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1584082940}
+  - component: {fileID: 1584082941}
+  m_Layer: 0
+  m_Name: SusManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1584082940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584082939}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1584082941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584082939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34a86eeefeb01b469688d1d49d2ff46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sussyMats:
+  - {fileID: 2100000, guid: aa3111f9a55543e41856670f8ab6ac77, type: 2}
+  - {fileID: 2100000, guid: cf48c64653035d34daccca4c21fad5b6, type: 2}
+  - {fileID: 2100000, guid: fd62f7a43d0bfd04294eacad06eb3583, type: 2}
+  - {fileID: 2100000, guid: 082697f25eb846b4e92c6e9b1c5bc058, type: 2}
+  deadAmongusPrefab: {fileID: 2395741212905753046, guid: 4dc2bc49c3720334a9e70069c679956b, type: 3}
+  deadAmongusMF: {fileID: 0}
+  deadAmongusMesh: {fileID: 0}
+  ghostPrefab: {fileID: 4181864684214655183, guid: e05bf30800ec4804f8dd81e4809ee552, type: 3}
+  sussyPrefab: {fileID: 226108939716774798, guid: 3496e73f76d27b741935d9fdd332e169, type: 3}
+  sussyAC: {fileID: 1144518145294050435, guid: 3496e73f76d27b741935d9fdd332e169, type: 3}
+  ghostAC: {fileID: 3947860373533226037, guid: e05bf30800ec4804f8dd81e4809ee552, type: 3}
+  sussySKM: {fileID: 0}
+  ghostSKM: {fileID: 0}
