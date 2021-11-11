@@ -402,6 +402,7 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 																				if(mostNeed == pnms.payload && state == SimState.TravelingToProvider)
 																				{
 																								agent.SetDestination(pnms.pos);
+																								Travel();
 																				}
 																				break;
 																}
@@ -412,6 +413,8 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 																				SusInfoMessage sims = (SusInfoMessage)ms;
 																				//sims I became newly sus of after other sim told me who they are sus of
 																				List<Sim> newlySus = new List<Sim>();
+																				//repeat sussy offenders
+																				List<Sim> reSus = new List<Sim>();
 																				foreach (var sussy in sims.payload)
 																				{
 																								if(!sussys.Contains(sussy))
@@ -419,9 +422,18 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 																												newlySus.Add(sussy);
 																												sussys.Add(sussy);
 																								}
+																								else
+																								{
+																												reSus.Add(sussy);
+																								}
 																				}
 
-																				sussyMan.OnSus(sims.crime, newlySus);
+																				//only tell the susmanager if I saw it happen, not if someone else told me about it
+																				if(sims.who == KnowledgeType.FirstHand)
+																				{
+																								sussyMan.OnSus(sims.crime, newlySus);
+																								sussyMan.OnResusUpdateCrime(sims.crime, reSus);
+																				}
 																				break;
 																}
 

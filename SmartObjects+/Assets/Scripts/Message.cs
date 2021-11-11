@@ -8,6 +8,11 @@ public enum MessageType
     SusInfo //message on sims I'm sus of
 };
 
+public enum KnowledgeType
+{
+    FirstHand, //I saw this happen
+    SecondHand //someone else told me this happened
+}
 public class Message
 {
     public MessageType type;
@@ -22,4 +27,5 @@ public class SusInfoMessage: Message
 {
     public SortedSet<Sim> payload;
     public Crimes crime;
+    public KnowledgeType who;
 }

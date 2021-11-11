@@ -142,7 +142,7 @@ public class SimViewFrustum : MonoBehaviour
 												//				crimes.Add(Crimes.kill);
 												//}
 
-												sim.ReceiveMessage(new SusInfoMessage { type = MessageType.SusInfo, payload = inMyVision,crime=crime });
+												sim.ReceiveMessage(new SusInfoMessage { type = MessageType.SusInfo, payload = inMyVision,crime=crime, who=KnowledgeType.FirstHand });
 												inMyVision.Clear();
 												//crime = Crimes.undetermined;
 												//sussySmartie = null;

@@ -126,6 +126,18 @@ public class SusManager : MonoBehaviour
 				{
 								return (Crimes)need;
 				}
+
+				//called when a Sim who is already sus of someone sees them doing some other sus thing
+				public void OnResusUpdateCrime(Crimes crime, List<Sim> sus)
+				{
+								int susCount = sus.Count;
+								for(int i = 0; i < susCount; ++i)
+								{
+												crimes[i] = crime; //crime should never be undetermined
+												ConvertToAmongus(sus[i], crime); //recolors amongus
+								}
+				}
+
 				//called when a Sim notices someone being sus
 				public void OnSus(Crimes crime, List<Sim> sus)
 				{
