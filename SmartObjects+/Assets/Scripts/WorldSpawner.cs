@@ -35,7 +35,7 @@ public class WorldSpawner : MonoBehaviour
 												{
 																Vector3 spawnPoint = world.GetRandomSpotOnTerrain();
 																GameObject smartie = Instantiate(smartObjects[i], spawnPoint, Quaternion.identity, world.transform);
-
+																smartie.transform.Rotate(new Vector3(0f, Random.Range(0f, 360f), 0f));
 																if (i == 0) //assumes tree is first in list
 																{
 																				treePoss.Add(smartie.transform.position);
