@@ -6,6 +6,8 @@ public class FlyByCameraController : MonoBehaviour
 {
 
     public float moveSpeed = 18; // the movement speed with WASD
+    public float maxCamHeight = 100;
+    public float minCamHeight = 10;
     private Rigidbody myBody; 
 
 
@@ -24,7 +26,14 @@ public class FlyByCameraController : MonoBehaviour
 
         Vector3 moveOffset = new Vector3(xAxis, yAxis, zAxis) * moveSpeed * Time.deltaTime;
 
+
+        if (((transform.position + moveOffset).y < minCamHeight) || ((transform.position + moveOffset).y > maxCamHeight))
+        {
+            moveOffset.y = 0;
+        }
+
         myBody.MovePosition(transform.position + moveOffset);
 
+      
     }
 }

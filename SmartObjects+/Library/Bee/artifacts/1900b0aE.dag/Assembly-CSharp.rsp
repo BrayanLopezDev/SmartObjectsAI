@@ -336,6 +336,7 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/VSSettingsProvider.ref.dll"
 "Assets/Scripts/Chicken.cs"
 "Assets/Scripts/FlyByCameraController.cs"
+"Assets/Scripts/FlyByCamRotationController.cs"
 "Assets/Scripts/Message.cs"
 "Assets/Scripts/ProximitySensor.cs"
 "Assets/Scripts/Sim.cs"
