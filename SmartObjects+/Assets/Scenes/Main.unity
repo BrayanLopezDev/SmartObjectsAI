@@ -350,11 +350,11 @@ MonoBehaviour:
   - 0.2
   - 0.25
   - 0.1
-  - 0.15
+  - 0.25
   - 0.1
   - 0.1
   - 0.2
-  simSpawnAmount: 25
+  simSpawnAmount: 20
   raycastStartY: 40
   world: {fileID: 987414992}
 --- !u!4 &1184616545
@@ -526,7 +526,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339101211}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 29.73, y: 52.3, z: 8.2}
+  m_LocalPosition: {x: 29.73, y: 52.3, z: -71.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

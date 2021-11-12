@@ -162,7 +162,7 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 																{
 																				provider = col.GetComponent<SmartObject>();
 
-																				if (provider)
+																				if (provider && provider.enabled)
 																				{
 																								if (provider.GetProvides() == mostNeed && CloseEnough(provider.transform.position))
 																								{
@@ -225,7 +225,7 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 
 				bool CloseEnough(Vector3 destination)
 				{
-								return (destination - transform.position).sqrMagnitude <= 8f;
+								return (destination - transform.position).sqrMagnitude <= 6f;
 				}
 
 				bool CloseEnough(Vector3 vec1, Vector3 vec2, float sqrMag)
@@ -271,12 +271,23 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 												if (providingMe)
 												{
 																providingMe.RequestRemovalOfService(this);
-																providingMe = null;
-																state = SimState.Wandering;
-																Reprioritize();
-																Travel();
+																DoneInteractingWithProvider();
 												}
 								}
+				}
+
+				public void ForceRemoveFromService()
+				{
+								DoneInteractingWithProvider();
+				}
+
+				void DoneInteractingWithProvider()
+				{
+								providingMe = null;
+								state = SimState.Wandering;
+								Reprioritize();
+								Travel();
+
 				}
 				void ArriveAtProvider(SmartObject provider)
 				{

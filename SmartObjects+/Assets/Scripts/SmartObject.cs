@@ -19,8 +19,13 @@ public struct SmartObjectServiceResponse
     public Needs service; //service this SmartObject provides
 }
 
+public delegate void VoidDelegate();
+public delegate void WhileSmartObjectIdle(); //when not providing for anyone
+public delegate void WhileSmartObjectProvide(); //when providing
+
 public class SmartObject : MonoBehaviour
 {
+
     [SerializeField]
     Needs provides; //need this smart object provides for our sims, also name of animation to play
     [SerializeField]
@@ -31,7 +36,10 @@ public class SmartObject : MonoBehaviour
     Sim[] providing; //the Sims this smartie is providing for right now
     [SerializeField]
     bool isSus; //is this a sussy task?
-    
+
+    WhileSmartObjectIdle WhileNotServicing;
+    WhileSmartObjectProvide WhileServicing;
+
 
     // Start is called before the first frame update
     void Start()
@@ -47,9 +55,10 @@ public class SmartObject : MonoBehaviour
 
     void Service()
     {
-        foreach(Sim sim in providing)
+        bool didIService = false;
+        foreach (Sim sim in providing)
         {
-            if(sim)
+            if (sim)
             {
                 //play the animations
                 AnimateSim(sim);
@@ -57,13 +66,55 @@ public class SmartObject : MonoBehaviour
 
                 //service their need
                 sim.ServiceNeed(provides, fillPerSecond * Time.deltaTime);
-												}
+
+                didIService = true;
+            }
+        }
+        if(didIService && WhileServicing != null)
+        {
+            WhileServicing();
 								}
-				}
+								else if(WhileNotServicing != null)
+								{
+            WhileNotServicing();
+								}
+    }
 
     public Needs GetProvides()
     {
         return provides;
+    }
+
+    public VoidDelegate GetShutdown()
+    {
+        return new VoidDelegate(Shutdown);    
+    }
+
+    public void RegisterWhileIdle(WhileSmartObjectIdle whileIdle)
+    {
+        WhileNotServicing = whileIdle;
+				}
+
+    public void RegisterWhileProvide(WhileSmartObjectProvide whileProvide)
+    {
+        WhileServicing = whileProvide;
+				}
+    void ForceRemoveAll()
+    {
+        for (int i = 0; i < capacity; ++i)
+        {
+            if (providing[i])
+            {
+                providing[i].ForceRemoveFromService();
+                RequestRemovalOfService(providing[i]);
+            }
+        }
+    }
+
+    void Shutdown()
+    {
+        ForceRemoveAll();
+        capacity = 0;
 				}
     public void RequestRemovalOfService(Sim sim)
     {
