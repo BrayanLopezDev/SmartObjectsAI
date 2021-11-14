@@ -171,7 +171,7 @@ public class SusManager : MonoBehaviour
 				}
 
 				//called when a Sim dies
-				public void OnDeath(Sim me, SortedSet<Sim> sus)
+				public void OnDeath(Sim me, List<Sim> sus)
 				{
 								SortedSet<int> toUnsus = new SortedSet<int>(); //sims to unsus
 								foreach (Sim sussy in sus)

@@ -25,7 +25,7 @@ public class ProvideNeedMessage : Message
 }
 public class SusInfoMessage: Message
 {
-    public SortedSet<Sim> payload;
+    public List<Sim> payload;
     public Crimes crime;
     public KnowledgeType who;
 }

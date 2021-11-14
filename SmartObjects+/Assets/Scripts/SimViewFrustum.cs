@@ -9,7 +9,7 @@ public class SimViewFrustum : MonoBehaviour
 				Sim sim;
 				//sims in my vision
 				[SerializeField]
-				SortedSet<Sim> inMyVision;
+				List<Sim> inMyVision;
 				//sussy smart object in my vision, assumes Sim will only see one at a time
 				[SerializeField]
 				SmartObject sussySmartie;
@@ -29,7 +29,7 @@ public class SimViewFrustum : MonoBehaviour
 								}
 				
 								sim = GetComponentInParent<Sim>();
-								inMyVision = new SortedSet<Sim>();
+								inMyVision = new List<Sim>();
 
 								crime = Crimes.undetermined;
 

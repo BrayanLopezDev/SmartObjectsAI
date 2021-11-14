@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -14,7 +15,7 @@ public enum SimState
 				InteractingWithProvider
 }
 
-public class Sim : MonoBehaviour,IComparable<Sim>
+public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 {
 				//to have something for the IComparable to sort them by, also to tell them apart
 				[SerializeField]
@@ -45,9 +46,9 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				//most recently seen smart object (at their position because some can move) which fulfills need
 				[SerializeField]
 				Vector3[] providers;
-				//list of Sims I'm sus of
+				//Sims I'm sus of
 				[SerializeField]
-				SortedSet<Sim> sussys;
+				Dictionary<Sim,Crimes> sussys;
 				//my navigation agent
 				[SerializeField]
 				NavMeshAgent agent;
@@ -97,7 +98,7 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 
 								ac = GetComponent<Animator>();
 
-								sussys = new SortedSet<Sim>();
+								sussys = new Dictionary<Sim, Crimes>();
 								providers = new Vector3[(int)Needs.needsAmount];
 								needs = new float[(int)Needs.needsAmount];
 
@@ -349,10 +350,10 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 								{
 												Sim other = col.GetComponent<Sim>();
 												//if there is someone there
-												if (other)
+												if (other && other.IsAlive())
 												{
 																//ask them for directions
-																Vector3 directions = other.RequestDirectionsToProvider(mostNeed);
+																Vector3 directions = other.RequestDirectionsToProvider(this, mostNeed);
 																//if no one has given me directions yet
 																if (providers[(int)mostNeed] == Vector3.zero)
 																{
@@ -384,11 +385,13 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 												state = SimState.TravelingToProvider;
 								}
 				}
-				public Vector3 RequestDirectionsToProvider(Needs service)
+				public Vector3 RequestDirectionsToProvider(Sim requester, Needs service)
 				{
 								EnsureStarted();
-								if(providers[(int)service] == Vector3.zero)
+								//if I don't know, or I think they're sus
+								if(providers[(int)service] == Vector3.zero || sussys.ContainsKey(requester))
 								{
+												//lie
 												return world.GetRandomSpotWithinTerrainBounds();
 								}
 								return providers[(int)service];
@@ -420,6 +423,12 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 
 												case MessageType.SusInfo:
 																{
+																				//if too busy get needs met by SmartObject, ignore this message
+																				if(state == SimState.InteractingWithProvider)
+																				{
+																								break;
+																				}
+
 																				//Sims = Sus Info Message? sus
 																				SusInfoMessage sims = (SusInfoMessage)ms;
 																				//sims I became newly sus of after other sim told me who they are sus of
@@ -428,10 +437,10 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 																				List<Sim> reSus = new List<Sim>();
 																				foreach (var sussy in sims.payload)
 																				{
-																								if(!sussys.Contains(sussy))
+																								if(!sussys.ContainsKey(sussy))
 																								{
 																												newlySus.Add(sussy);
-																												sussys.Add(sussy);
+																												sussys[sussy] = sims.crime;
 																								}
 																								else
 																								{
@@ -477,7 +486,7 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 				}
 				public void Die()
 				{
-								sussyMan.OnDeath(this, sussys);
+								sussyMan.OnDeath(this, sussys.Keys.ToList<Sim>());
 								GetComponentInChildren<SimViewFrustum>().OnDeath();
 								isAlive = false;
 								this.enabled = false;
@@ -511,9 +520,9 @@ public class Sim : MonoBehaviour,IComparable<Sim>
 								needs[(int)need] += amount;
 				}
 
-				//I don't care how they're sorted, I just wanted a Set but I can't have a Set unless its specifically a Sorted Set???
-				public int CompareTo(Sim other)
-				{
-								return (int)(id - other.id); 
-				}
+				////I don't care how they're sorted, I just wanted a Set but I can't have a Set unless its specifically a Sorted Set???
+				//public int CompareTo(Sim other)
+				//{
+				//				return (int)(id - other.id); 
+				//}
 }

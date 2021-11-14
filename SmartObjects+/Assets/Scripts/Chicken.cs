@@ -93,6 +93,8 @@ public class Chicken : MonoBehaviour
 								rb.AddForce(new Vector3(0f, 1000f, 0f));
 								//disable navmeshagent
 								agent.enabled = false;
+								//disable proximity sensor
+								Destroy(proxSensor);
 								//disable this script
 								this.enabled = false;
 				}
