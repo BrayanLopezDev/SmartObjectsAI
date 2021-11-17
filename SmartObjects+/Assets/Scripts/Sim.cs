@@ -34,9 +34,9 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 				//when Sim will start to consider the need
 				[SerializeField]
 				float[] lows;
-				//when Sim is caught being sus, at what point they will try to kill their witness
+				//when Sim is approached by another Sim while getting provided for, how much should their need be full before they decide to leave?
 				[SerializeField]
-				float[] enoughToKills;
+				float[] enoughToLeaves;
 				//needs, 1-1 with Needs enum
 				[SerializeField]
 				float[] needs;
@@ -48,13 +48,13 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 				Vector3[] providers;
 				//Sims I'm sus of
 				[SerializeField]
-				Dictionary<Sim,Crimes> sussys;
+				Dictionary<Sim, Crimes> sussys;
 				//my navigation agent
 				[SerializeField]
 				NavMeshAgent agent;
 				//Smart Object thats providing a need for me right now
 				[SerializeField]
-				SmartObject providingMe; 
+				SmartObject providingMe;
 				//if Start() has been called yet, needed because receiving messages can happen before Start() gets called
 				bool started = false;
 				[SerializeField]
@@ -141,7 +141,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 				//the animator can be destroyed and a different one can be added at an undetermined time, get AC this way
 				Animator AC()
 				{
-								if(!ac)
+								if (!ac)
 								{
 												ac = GetComponent<Animator>();
 								}
@@ -198,7 +198,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 								{
 												Reprioritize();
 								}
-								if(state == SimState.TravelingToProvider)
+								if (state == SimState.TravelingToProvider)
 								{
 												Travel();
 								}
@@ -210,7 +210,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 								if (mostNeed != Needs.needsAmount)
 								{
 												//solves the problem of sim thinking they reached their destination but they're 20ft away
-												if(agent.destination != providers[(int)mostNeed])
+												if (agent.destination != providers[(int)mostNeed])
 												{
 																agent.SetDestination(providers[(int)mostNeed]);
 												}
@@ -377,7 +377,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 												}
 								}
 								//if I didn't get what I thought were valid directions
-								if (CloseEnough(providers[(int)mostNeed],outdated,25f))
+								if (CloseEnough(providers[(int)mostNeed], outdated, 25f))
 								{
 												//go somewhere random
 												providers[(int)mostNeed] = world.GetRandomSpotWithinTerrainBounds();
@@ -389,7 +389,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 				{
 								EnsureStarted();
 								//if I don't know, or I think they're sus
-								if(providers[(int)service] == Vector3.zero || sussys.ContainsKey(requester))
+								if (providers[(int)service] == Vector3.zero || sussys.ContainsKey(requester))
 								{
 												//lie
 												return world.GetRandomSpotWithinTerrainBounds();
@@ -404,6 +404,10 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 				public void ReceiveMessage(Message ms)
 				{
 								EnsureStarted();
+								if(!isAlive)
+								{
+												return;
+								}
 								switch (ms.type)
 								{
 												case MessageType.ProvideNeed:
@@ -413,7 +417,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 
 																				providers[needsIndex] = pnms.pos;
 																				//if this smartobject has what I need the most, go there instead
-																				if(mostNeed == pnms.payload && state == SimState.TravelingToProvider)
+																				if (mostNeed == pnms.payload && state == SimState.TravelingToProvider)
 																				{
 																								agent.SetDestination(pnms.pos);
 																								Travel();
@@ -424,7 +428,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 												case MessageType.SusInfo:
 																{
 																				//if too busy get needs met by SmartObject, ignore this message
-																				if(state == SimState.InteractingWithProvider)
+																				if (state == SimState.InteractingWithProvider)
 																				{
 																								break;
 																				}
@@ -437,29 +441,75 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 																				List<Sim> reSus = new List<Sim>();
 																				foreach (var sussy in sims.payload)
 																				{
-																								if(!sussys.ContainsKey(sussy))
+																								if (!sussys.ContainsKey(sussy))
 																								{
 																												newlySus.Add(sussy);
-																												sussys[sussy] = sims.crime;
 																								}
 																								else
 																								{
 																												reSus.Add(sussy);
 																								}
+																								sussys[sussy] = sims.crime;
 																				}
 
-																				//only tell the susmanager if I saw it happen, not if someone else told me about it
-																				if(sims.who == KnowledgeType.FirstHand)
+																				//the sussy manager must know all about sus
+																				sussyMan.OnSus(sims.crime, newlySus, sims.who);
+																				sussyMan.OnResusUpdateCrime(sims.crime, reSus, sims.who);
+																				break;
+																}
+												case MessageType.SimInfo:
+																{
+																				SimInfoMessage sims = (SimInfoMessage)ms;
+																				int simCount = sims.payload.Count;
+																				
+																				for(int i = 0; i < simCount; ++i)
 																				{
-																								sussyMan.OnSus(sims.crime, newlySus);
-																								sussyMan.OnResusUpdateCrime(sims.crime, reSus);
+																								Sim other = sims.payload[i];
+																								if (sussys.ContainsKey(other)) //if im sus of em
+																								{
+																												//go somewhere else if I'm not too terribly low on the need I'm gettting served right now
+																												if(state == SimState.InteractingWithProvider && needs[(int)mostNeed] >= lows[(int)mostNeed])
+																												{
+																																providingMe.RequestRemovalOfService(this);
+																																providingMe = null;
+																																state = SimState.Wandering;
+																												}
+																												if(!IsCritical(mostNeed)) //if I'm not critically low on that need, go somewhere else
+																												{
+																																providers[(int)mostNeed] = world.GetRandomSpotWithinTerrainBounds();
+																																if (state == SimState.TravelingToProvider)
+																																{
+																																				agent.SetDestination(providers[(int)mostNeed]);
+																																}
+
+																												}
+																								}
+																								else if(state != SimState.InteractingWithProvider) //if im not busy interacting with provider
+																								{
+																												SendSusInfoMessage(other);
+																								}
 																				}
+
 																				break;
 																}
 
 								}
 				}
 
+				void SendSusInfoMessage(Sim other)
+				{
+								List<Sim> sus = new List<Sim>();
+
+								foreach(var sussy in sussys)
+								{
+												if(Random.Range(0,300)==0) //1 in 600 chance
+												{
+																sus.Add(sussy.Key);
+																other.ReceiveMessage(new SusInfoMessage {type=MessageType.SusInfo,crime=sussy.Value,payload=sus,who=KnowledgeType.SecondHand});
+																sus.Clear();
+												}
+								}
+				}
 				bool IsCritical(Needs need)
 				{
 								return needs[(int)need] <= crits[(int)need];
@@ -467,7 +517,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 
 				void Travel()
 				{
-								if(IsCritical(mostNeed))
+								if (IsCritical(mostNeed))
 								{
 												//play run animation
 												AC().SetBool("run", true);
@@ -494,7 +544,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 
 				public void Kill()
 				{
-								if(providingMe) //if a smart object is providing for me right now
+								if (providingMe) //if a smart object is providing for me right now
 								{
 												//have them kill me
 												providingMe.Kill(this);
@@ -503,7 +553,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 								{
 												SmartObject smartie = GameObject.FindObjectOfType<SmartObject>();
 
-												if(smartie)
+												if (smartie)
 												{
 																smartie.Kill(this);
 												}

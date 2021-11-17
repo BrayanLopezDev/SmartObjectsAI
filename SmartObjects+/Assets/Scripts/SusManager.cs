@@ -128,8 +128,12 @@ public class SusManager : MonoBehaviour
 				}
 
 				//called when a Sim who is already sus of someone sees them doing some other sus thing
-				public void OnResusUpdateCrime(Crimes crime, List<Sim> sus)
+				public void OnResusUpdateCrime(Crimes crime, List<Sim> sus, KnowledgeType type)
 				{
+								if(type==KnowledgeType.SecondHand)
+								{
+												return;
+								}
 								int susCount = sus.Count;
 								for(int i = 0; i < susCount; ++i)
 								{
@@ -139,7 +143,7 @@ public class SusManager : MonoBehaviour
 				}
 
 				//called when a Sim notices someone being sus
-				public void OnSus(Crimes crime, List<Sim> sus)
+				public void OnSus(Crimes crime, List<Sim> sus, KnowledgeType type)
 				{
 								int susCount = sus.Count;
 
@@ -150,7 +154,8 @@ public class SusManager : MonoBehaviour
 												{
 																if (sus[i] == sussys[j])
 																{
-																				if (crime != Crimes.undetermined)
+																				//if (crime != Crimes.undetermined)
+																				if(type != KnowledgeType.SecondHand)
 																				{
 																								crimes[j] = crime;
 																								ConvertToAmongus(sus[i], crime); //recolors amongus

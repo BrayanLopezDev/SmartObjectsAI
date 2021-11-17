@@ -147,6 +147,10 @@ public class SimViewFrustum : MonoBehaviour
 												//crime = Crimes.undetermined;
 												//sussySmartie = null;
 								}
+								if(inMyVision.Count > 0)
+								{
+												sim.ReceiveMessage(new SimInfoMessage { type = MessageType.SimInfo, payload = inMyVision });
+								}
 				}
 				public void OnDeath()
 				{

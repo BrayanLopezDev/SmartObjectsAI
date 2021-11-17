@@ -354,7 +354,7 @@ MonoBehaviour:
   - 0.1
   - 0.1
   - 0.2
-  simSpawnAmount: 20
+  simSpawnAmount: 25
   raycastStartY: 40
   world: {fileID: 987414992}
 --- !u!4 &1184616545

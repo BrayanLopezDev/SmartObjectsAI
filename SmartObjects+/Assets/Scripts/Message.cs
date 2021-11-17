@@ -5,7 +5,8 @@ using UnityEngine;
 public enum MessageType
 {
     ProvideNeed, //message of need I provide (fulfill)
-    SusInfo //message on sims I'm sus of
+    SusInfo, //message on sims I'm sus of
+    SimInfo, //message on sims I saw
 };
 
 public enum KnowledgeType
@@ -23,9 +24,14 @@ public class ProvideNeedMessage : Message
     public Needs payload;
     public Vector3 pos;
 }
-public class SusInfoMessage: Message
+public class SusInfoMessage : Message
 {
     public List<Sim> payload;
     public Crimes crime;
     public KnowledgeType who;
+}
+
+public class SimInfoMessage : Message
+{
+    public List<Sim> payload;
 }
