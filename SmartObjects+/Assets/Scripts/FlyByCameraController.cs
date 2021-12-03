@@ -18,7 +18,7 @@ public class FlyByCameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float xAxis = Input.GetAxis("Horizontal");
         float zAxis = Input.GetAxis("Vertical");
@@ -33,7 +33,9 @@ public class FlyByCameraController : MonoBehaviour
             moveOffset.y = 0;
         }
 
-        myBody.MovePosition(transform.position + moveOffset);
+
+        myBody.transform.position = transform.position + moveOffset;
+        //myBody.MovePosition(transform.position + moveOffset);
 
       
     }
