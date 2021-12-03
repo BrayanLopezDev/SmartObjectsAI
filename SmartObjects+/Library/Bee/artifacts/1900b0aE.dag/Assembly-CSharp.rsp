@@ -340,6 +340,7 @@
 "Assets/Scripts/LookAtPlayer.cs"
 "Assets/Scripts/Message.cs"
 "Assets/Scripts/ProximitySensor.cs"
+"Assets/Scripts/SelectSim.cs"
 "Assets/Scripts/Sim.cs"
 "Assets/Scripts/SimpleCameraController.cs"
 "Assets/Scripts/SimViewFrustum.cs"
