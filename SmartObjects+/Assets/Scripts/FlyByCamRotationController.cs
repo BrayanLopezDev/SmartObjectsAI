@@ -14,15 +14,15 @@ public class FlyByCamRotationController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float rotXAxis = Input.GetAxis("Mouse X");
         float rotYAxis = Input.GetAxis("Mouse Y");
         if (Input.GetKey(KeyCode.Mouse1))
         {
             Screen.lockCursor = true; // had to use this method instead of new method because new method is bugged
-            transform.RotateAround(myBody.position, Vector3.up, rotXAxis * cameraSens );
-            transform.RotateAround(myBody.position, -transform.right, rotYAxis * cameraSens);
+            transform.RotateAround(myBody.position, Vector3.up, rotXAxis * cameraSens * Time.deltaTime );
+            transform.RotateAround(myBody.position, -transform.right, rotYAxis * cameraSens * Time.deltaTime);
         }
         else
         {
