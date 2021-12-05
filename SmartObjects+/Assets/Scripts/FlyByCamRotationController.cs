@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class FlyByCamRotationController : MonoBehaviour
 {
-    private Rigidbody myBody;
     public float cameraSens = 1;
     public bool LockCursorOnRotate = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        myBody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -25,8 +23,8 @@ public class FlyByCamRotationController : MonoBehaviour
             {
                 Screen.lockCursor = true; // had to use this method instead of new method because new method is bugged
             }    
-            transform.RotateAround(myBody.position, Vector3.up, rotXAxis * cameraSens * Time.unscaledDeltaTime );
-            transform.RotateAround(myBody.position, -transform.right, rotYAxis * cameraSens * Time.unscaledDeltaTime);
+            transform.RotateAround(transform.position, Vector3.up, rotXAxis * cameraSens * Time.unscaledDeltaTime );
+            transform.RotateAround(transform.position, -transform.right, rotYAxis * cameraSens * Time.unscaledDeltaTime);
         }
         else
         {
