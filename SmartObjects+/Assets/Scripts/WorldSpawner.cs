@@ -12,8 +12,9 @@ public class WorldSpawner : MonoBehaviour
   GameObject simprefab; //sim prefab
   [SerializeField]
   float[] maxSpawnsPerSim; //max amount of smart objects to spawn per sim
-  [SerializeField]
-  int simSpawnAmount; //how many sims to spawn
+
+  static int simSpawnAmount; //how many sims to spawn, dictated by RestartSimulation()
+
   [SerializeField]
   float raycastStartY; // height at which to begin raycast
   [SerializeField]
@@ -22,6 +23,7 @@ public class WorldSpawner : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
+
     world = GameObject.FindObjectOfType<World>().GetComponent<World>();
     int[] maxSpawns = new int[maxSpawnsPerSim.Length];
 
@@ -57,9 +59,14 @@ public class WorldSpawner : MonoBehaviour
 
   }
 
-  // Update is called once per frame
-  void Update()
+  public static void SetSimSpawnAmount(int amt)
   {
-
+    simSpawnAmount = amt;
   }
+
+  public static int GetSimSpawnAmount()
+  {
+    return simSpawnAmount;
+  }
+
 }
