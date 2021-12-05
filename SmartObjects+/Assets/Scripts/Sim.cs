@@ -592,6 +592,16 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
     simInfoUI.SetActive(false);
   }
 
+  public Dictionary<Sim, Crimes> GetSussyList()
+  {
+    return sussys;
+  }
+
+  public int GetID()
+  {
+    return id;
+  }
+
   ////I don't care how they're sorted, I just wanted a Set but I can't have a Set unless its specifically a Sorted Set???
   //public int CompareTo(Sim other)
   //{
