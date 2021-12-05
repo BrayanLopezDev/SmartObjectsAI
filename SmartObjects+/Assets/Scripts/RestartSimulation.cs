@@ -27,6 +27,8 @@ public class RestartSimulation : MonoBehaviour
     }
     spawnAmountText.text = spawnAmount.ToString();
 
+    GameObject.FindObjectOfType<WorldSpawner>().WorldStart();
+
     started = true;
   }
 

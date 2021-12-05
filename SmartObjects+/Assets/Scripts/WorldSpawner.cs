@@ -21,7 +21,7 @@ public class WorldSpawner : MonoBehaviour
   World world;
 
   // Start is called before the first frame update
-  void Start()
+  public void WorldStart()
   {
 
     world = GameObject.FindObjectOfType<World>().GetComponent<World>();
