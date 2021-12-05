@@ -71,6 +71,7 @@ public class SelectSim : MonoBehaviour
       if (prev)
       {
         prev.Deselect();
+        ClearSussyList();
       }
       sim.Select();
       prev = sim;
@@ -94,6 +95,17 @@ public class SelectSim : MonoBehaviour
 
       simRef.sim = sussyPair.Key;
       simRef.simSelector = this;
+    }
+  }
+
+  void ClearSussyList()
+  {
+    Transform susEntries = sussyListParent.transform;
+    int susEntryCount = susEntries.childCount;
+
+    for(int i = 0; i < susEntryCount; ++i)
+    {
+      Destroy(susEntries.GetChild(0).gameObject);
     }
   }
   public void Follow()
