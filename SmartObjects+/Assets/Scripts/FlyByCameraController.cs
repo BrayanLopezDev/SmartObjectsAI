@@ -18,13 +18,13 @@ public class FlyByCameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        float xAxis = Input.GetAxis("Horizontal");
-        float zAxis = Input.GetAxis("Vertical");
-        float yAxis = Input.GetAxis("Fire1");
+        float xAxis = Input.GetAxisRaw("Horizontal");
+        float zAxis = Input.GetAxisRaw("Vertical");
+        float yAxis = Input.GetAxisRaw("Fire1");
 
-        Vector3 moveOffset = xAxis* transform.right+yAxis*transform.up+zAxis*transform.forward * moveSpeed * Time.deltaTime;
+        Vector3 moveOffset = xAxis* transform.right+yAxis*transform.up+zAxis*transform.forward * moveSpeed * Time.unscaledDeltaTime;
         //Vector3 moveOffset = new Vector3(xAxis, yAxis, zAxis) * moveSpeed * Time.deltaTime;
 
 

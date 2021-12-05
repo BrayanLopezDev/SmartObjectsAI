@@ -15,7 +15,7 @@ public class FlyByCamRotationController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         float rotXAxis = Input.GetAxis("Mouse X");
         float rotYAxis = Input.GetAxis("Mouse Y");
@@ -25,8 +25,8 @@ public class FlyByCamRotationController : MonoBehaviour
             {
                 Screen.lockCursor = true; // had to use this method instead of new method because new method is bugged
             }    
-            transform.RotateAround(myBody.position, Vector3.up, rotXAxis * cameraSens * Time.deltaTime );
-            transform.RotateAround(myBody.position, -transform.right, rotYAxis * cameraSens * Time.deltaTime);
+            transform.RotateAround(myBody.position, Vector3.up, rotXAxis * cameraSens * Time.unscaledDeltaTime );
+            transform.RotateAround(myBody.position, -transform.right, rotYAxis * cameraSens * Time.unscaledDeltaTime);
         }
         else
         {
