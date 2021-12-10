@@ -20,7 +20,6 @@ public class WorldSpawner : MonoBehaviour
   [SerializeField]
   World world;
 
-  // Start is called before the first frame update
   public void WorldStart()
   {
 

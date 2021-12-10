@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -101,9 +102,25 @@ public class SusManager : MonoBehaviour
   [SerializeField]
   SkinnedMeshRenderer ghostSKM;
 
+  //fileIO
+  string alivesPath;
+  string susOTPath;
+  StreamWriter alivesWriter;
+  StreamWriter susOTWriter;
+
+  int simStartAmount = 0;
+  int simAliveAmount;
+
+  float writeTimer;
+
   // Start is called before the first frame update
   void Start()
   {
+    if(simStartAmount == 0)
+    {
+      GameObject.FindObjectOfType<RestartSimulation>().StartNow();
+    }
+
     sussyAC = sussyPrefab.GetComponent<Animator>();
     sussySKM = sussyPrefab.GetComponentInChildren<SkinnedMeshRenderer>();
 
@@ -123,12 +140,61 @@ public class SusManager : MonoBehaviour
     {
       sussyColors[i] = sussyMats[i].color;
     }
+
+    CreateStatsDocuments();
+  }
+
+  void CreateStatsDocuments()
+  {
+    alivesPath = "./Alives" + ((int)Time.time).ToString() + ".csv";
+    susOTPath = "./_Sus" + ((int)Time.time).ToString() + ".csv";
+
+    alivesWriter = File.CreateText(alivesPath);
+    susOTWriter = File.CreateText(susOTPath);
+
+    alivesWriter.WriteLine("Time,Alive");
+    susOTWriter.WriteLine("Time,Sus Amount");
+
+    //alivesWriter.WriteLine("0," + simStartAmount.ToString());
+    //susOTWriter.WriteLine("0,0");
+
+    writeTimer = 1f;
+  }
+
+  void UpdateAlivesData()
+  {
+    alivesWriter.WriteLine(((int)Time.timeSinceLevelLoad).ToString() + "," + simAliveAmount.ToString());
+  }
+
+  void UpdateSusData()
+  {
+    susOTWriter.WriteLine(((int)Time.timeSinceLevelLoad).ToString() + "," + TotalSusAmount().ToString());
+  }
+
+  int TotalSusAmount()
+  {
+    int total = 0;
+
+    foreach(var susAmt in refCounts)
+    {
+      total += susAmt;
+    }
+
+    return total;
   }
 
   // Update is called once per frame
   void Update()
   {
+    writeTimer -= Time.deltaTime;
 
+    if(writeTimer <= 0f)
+    {
+      UpdateAlivesData();
+      UpdateSusData();
+
+      writeTimer = 1f;
+    }
   }
   //converts need to a crime
   public static Crimes NeedToCrime(Needs need)
@@ -187,6 +253,8 @@ public class SusManager : MonoBehaviour
   //called when a Sim dies
   public void OnDeath(Sim me, List<Sim> sus)
   {
+    simAliveAmount--;
+
     SortedSet<int> toUnsus = new SortedSet<int>(); //sims to unsus
     foreach (Sim sussy in sus)
     {
@@ -288,5 +356,17 @@ public class SusManager : MonoBehaviour
   public Color GetCrimeColor(Crimes crime)
   {
     return sussyColors[(int)crime];
+  }
+
+  public void SetSimStartAmount(int amt)
+  {
+    simStartAmount = amt;
+    simAliveAmount = amt;
+  }
+
+  void OnDestroy()
+  {
+    alivesWriter.Close();
+    susOTWriter.Close();
   }
 }

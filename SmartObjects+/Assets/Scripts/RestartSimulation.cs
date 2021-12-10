@@ -13,9 +13,13 @@ public class RestartSimulation : MonoBehaviour
 
   bool started = false;
 
-  // Start is called before the first frame update
   void Start()
   {
+    if(started)
+    {
+      return;
+    }
+
     int oldSpawnAmt = WorldSpawner.GetSimSpawnAmount();
     if(oldSpawnAmt == 0)
     {
@@ -27,11 +31,18 @@ public class RestartSimulation : MonoBehaviour
     }
     spawnAmountText.text = spawnAmount.ToString();
 
+
+
+    GameObject.FindObjectOfType<SusManager>().SetSimStartAmount(spawnAmount);
     GameObject.FindObjectOfType<WorldSpawner>().WorldStart();
 
     started = true;
   }
 
+  public void StartNow()
+  {
+    Start();
+  }
   public void SetSpawnAmount(int amt)
   {
     spawnAmount = amt;
