@@ -4,6 +4,7 @@ using System.Reflection;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public enum Crimes //very similar to needs
 {
@@ -146,8 +147,8 @@ public class SusManager : MonoBehaviour
 
   void CreateStatsDocuments()
   {
-    alivesPath = "./Alives" + ((int)Time.time).ToString() + ".csv";
-    susOTPath = "./_Sus" + ((int)Time.time).ToString() + ".csv";
+    alivesPath = "./Alives" + simStartAmount.ToString() + "_" + ((int)DateTime.Now.Ticks).ToString() + ".csv";
+    susOTPath = "./_Sus" + simStartAmount.ToString() + "_" + ((int)DateTime.Now.Ticks).ToString() + ".csv";
 
     alivesWriter = File.CreateText(alivesPath);
     susOTWriter = File.CreateText(susOTPath);
