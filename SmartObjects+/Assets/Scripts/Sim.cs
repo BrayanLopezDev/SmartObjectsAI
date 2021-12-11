@@ -300,7 +300,6 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
     state = SimState.Wandering;
     Reprioritize();
     Travel();
-
   }
   void ArriveAtProvider(SmartObject provider)
   {
@@ -308,7 +307,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
     //if the smart object said no
     if (!response.response)
     {
-      //if we're desparate because we REALLY need this				
+      //if we're desparate because we REALLY need this
       if (IsCritical(response.service))
       {
         int min = 0;
@@ -493,7 +492,6 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
                 {
                   agent.SetDestination(providers[(int)mostNeed]);
                 }
-
               }
             }
             else if (state != SimState.InteractingWithProvider) //if im not busy interacting with provider
@@ -514,7 +512,7 @@ public class Sim : MonoBehaviour/*,IComparable<Sim>*/
 
     foreach (var sussy in sussys)
     {
-      if (Random.Range(0, 300) == 0) //1 in 600 chance
+      if (Random.Range(0, 300) == 0) //1 in 300 chance per frame
       {
         sus.Add(sussy.Key);
         other.ReceiveMessage(new SusInfoMessage { type = MessageType.SusInfo, crime = sussy.Value, payload = sus, who = KnowledgeType.SecondHand });

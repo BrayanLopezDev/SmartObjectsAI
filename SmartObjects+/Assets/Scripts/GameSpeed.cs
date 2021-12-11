@@ -11,7 +11,7 @@ public class GameSpeed : MonoBehaviour
   {
     gameSpeedSlider = GetComponent<Slider>();
 
-    if(GameMode.mode == GameModes.DataCollection)
+    if (GameMode.mode == GameModes.DataCollection)
     {
       SpeedChanged(10f);
       gameSpeedSlider.SetValueWithoutNotify(10f);

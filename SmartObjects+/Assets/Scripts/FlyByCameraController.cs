@@ -27,6 +27,6 @@ public class FlyByCameraController : MonoBehaviour
 
 
     transform.position += moveOffset;
-    transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minCamHeight, maxCamHeight),transform.position.z);
+    transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minCamHeight, maxCamHeight), transform.position.z);
   }
 }

@@ -16,12 +16,12 @@ public class RestartSimulation : MonoBehaviour
 
   void Start()
   {
-    if(started)
+    if (started)
     {
       return;
     }
 
-    if(GameMode.mode == GameModes.DataCollection)
+    if (GameMode.mode == GameModes.DataCollection)
     {
       using (TextReader tr = File.OpenText("./__SpawnAmount.txt"))
       {
@@ -32,7 +32,7 @@ public class RestartSimulation : MonoBehaviour
     else
     {
       int oldSpawnAmt = WorldSpawner.GetSimSpawnAmount();
-      if(oldSpawnAmt == 0)
+      if (oldSpawnAmt == 0)
       {
         WorldSpawner.SetSimSpawnAmount(spawnAmount);
       }
@@ -74,7 +74,7 @@ public class RestartSimulation : MonoBehaviour
 
   void EnsureStarted()
   {
-    if(!started)
+    if (!started)
     {
       Start();
     }

@@ -147,7 +147,7 @@ public class SusManager : MonoBehaviour
       sussyColors[i] = sussyMats[i].color;
     }
 
-    if(GameMode.mode == GameModes.DataCollection)
+    if (GameMode.mode == GameModes.DataCollection)
     {
       CreateStatsDocuments();
     }

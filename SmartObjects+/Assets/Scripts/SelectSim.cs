@@ -103,7 +103,7 @@ public class SelectSim : MonoBehaviour
     Transform susEntries = sussyListParent.transform;
     int susEntryCount = susEntries.childCount;
 
-    for(int i = 0; i < susEntryCount; ++i)
+    for (int i = 0; i < susEntryCount; ++i)
     {
       Destroy(susEntries.GetChild(0).gameObject);
     }
