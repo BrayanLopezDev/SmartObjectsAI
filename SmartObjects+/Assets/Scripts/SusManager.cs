@@ -111,13 +111,18 @@ public class SusManager : MonoBehaviour
 
   int simStartAmount = 0;
   int simAliveAmount;
-
+  int dataPoints = 0;
   float writeTimer;
+
+  [SerializeField]
+  float maxTime;
+
+  bool writeCompleted = false;
 
   // Start is called before the first frame update
   void Start()
   {
-    if(simStartAmount == 0)
+    if (simStartAmount == 0)
     {
       GameObject.FindObjectOfType<RestartSimulation>().StartNow();
     }
@@ -137,17 +142,20 @@ public class SusManager : MonoBehaviour
 
     sussyColors = new Color[sussyMats.Length];
 
-    for(int i = 0; i < sussyMats.Length; ++i)
+    for (int i = 0; i < sussyMats.Length; ++i)
     {
       sussyColors[i] = sussyMats[i].color;
     }
 
-    CreateStatsDocuments();
+    if(GameMode.mode == GameModes.DataCollection)
+    {
+      CreateStatsDocuments();
+    }
   }
 
   void CreateStatsDocuments()
   {
-    alivesPath = "./Alives" + simStartAmount.ToString() + "_" + ((int)DateTime.Now.Ticks).ToString() + ".csv";
+    alivesPath = "./_Alives" + simStartAmount.ToString() + "_" + ((int)DateTime.Now.Ticks).ToString() + ".csv";
     susOTPath = "./_Sus" + simStartAmount.ToString() + "_" + ((int)DateTime.Now.Ticks).ToString() + ".csv";
 
     alivesWriter = File.CreateText(alivesPath);
@@ -156,8 +164,8 @@ public class SusManager : MonoBehaviour
     alivesWriter.WriteLine("Time,Alive");
     susOTWriter.WriteLine("Time,Sus Amount");
 
-    //alivesWriter.WriteLine("0," + simStartAmount.ToString());
-    //susOTWriter.WriteLine("0,0");
+    alivesWriter.WriteLine("0," + simStartAmount.ToString());
+    susOTWriter.WriteLine("0,0");
 
     writeTimer = 1f;
   }
@@ -176,7 +184,7 @@ public class SusManager : MonoBehaviour
   {
     int total = 0;
 
-    foreach(var susAmt in refCounts)
+    foreach (var susAmt in refCounts)
     {
       total += susAmt;
     }
@@ -187,14 +195,23 @@ public class SusManager : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    writeTimer -= Time.deltaTime;
-
-    if(writeTimer <= 0f)
+    if (GameMode.mode == GameModes.DataCollection)
     {
-      UpdateAlivesData();
-      UpdateSusData();
+      writeTimer -= Time.deltaTime;
 
-      writeTimer = 1f;
+      if (!writeCompleted && writeTimer <= 0f)
+      {
+        UpdateAlivesData();
+        UpdateSusData();
+        dataPoints++;
+        writeTimer = 1f;
+      }
+
+      if (dataPoints == (int)maxTime)
+      {
+        CompleteTelemetry();
+        Application.Quit(0);
+      }
     }
   }
   //converts need to a crime
@@ -365,9 +382,11 @@ public class SusManager : MonoBehaviour
     simAliveAmount = amt;
   }
 
-  void OnDestroy()
+  void CompleteTelemetry()
   {
+    writeCompleted = true;
     alivesWriter.Close();
     susOTWriter.Close();
   }
+
 }

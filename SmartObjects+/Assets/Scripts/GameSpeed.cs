@@ -9,7 +9,13 @@ public class GameSpeed : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
+    gameSpeedSlider = GetComponent<Slider>();
 
+    if(GameMode.mode == GameModes.DataCollection)
+    {
+      SpeedChanged(10f);
+      gameSpeedSlider.SetValueWithoutNotify(10f);
+    }
   }
 
   // Update is called once per frame

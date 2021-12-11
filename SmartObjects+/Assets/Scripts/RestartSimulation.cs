@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -20,18 +21,28 @@ public class RestartSimulation : MonoBehaviour
       return;
     }
 
-    int oldSpawnAmt = WorldSpawner.GetSimSpawnAmount();
-    if(oldSpawnAmt == 0)
+    if(GameMode.mode == GameModes.DataCollection)
     {
+      using (TextReader tr = File.OpenText("./__SpawnAmount.txt"))
+      {
+        spawnAmount = int.Parse(tr.ReadLine());
+      }
       WorldSpawner.SetSimSpawnAmount(spawnAmount);
     }
     else
     {
-      spawnAmount = oldSpawnAmt;
+      int oldSpawnAmt = WorldSpawner.GetSimSpawnAmount();
+      if(oldSpawnAmt == 0)
+      {
+        WorldSpawner.SetSimSpawnAmount(spawnAmount);
+      }
+      else
+      {
+        spawnAmount = oldSpawnAmt;
+      }
     }
+
     spawnAmountText.text = spawnAmount.ToString();
-
-
 
     GameObject.FindObjectOfType<SusManager>().SetSimStartAmount(spawnAmount);
     GameObject.FindObjectOfType<WorldSpawner>().WorldStart();
